@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -20,6 +21,15 @@ func parseURL(raw string) (t_url string) {
 	domain := u_proto_regex.ReplaceAllString(t_url_parts[1], "$1://")
 	t_url = domain + "/" + strings.Join(t_url_parts[2:], "/")
 	log.Println("Target URL: " + t_url)
+	return
+}
+
+func parseArgs() (p int) {
+	p = *(flag.Int("port", 8080, "Listening port number: 1024 <= port <= 65535"))
+	if p < 1024 || p > 65535 {
+		log.Fatalln("Invalid Argument!")
+	}
+
 	return
 }
 
@@ -44,6 +54,8 @@ func proxyGLWebHook(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	p := parseArgs()
 	http.HandleFunc("/", proxyGLWebHook)
-	log.Fatalln(http.ListenAndServe(":8080", nil))
+	lurl := fmt.Sprintf(":%d", p)
+	log.Fatalln(http.ListenAndServe(lurl, nil))
 }
