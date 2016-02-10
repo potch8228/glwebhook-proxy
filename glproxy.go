@@ -57,5 +57,6 @@ func main() {
 	p := parseArgs()
 	http.HandleFunc("/", proxyGLWebHook)
 	lurl := fmt.Sprintf(":%d", p)
+	log.Println("Trying to Listening on: " + lurl)
 	log.Fatalln(http.ListenAndServe(lurl, nil))
 }
