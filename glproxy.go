@@ -15,14 +15,18 @@ func msg(w http.ResponseWriter, msg string, status int) {
 	fmt.Fprintln(w, msg)
 }
 
+func parseURL(raw string) (t_url string) {
+	t_url_parts := strings.Split(raw, "/")
+	domain := u_proto_regex.ReplaceAllString(t_url_parts[1], "$1://")
+	t_url = domain + "/" + strings.Join(t_url_parts[2:], "/")
+	log.Println("Target URL: " + t_url)
+	return
+}
+
 var u_proto_regex = regexp.MustCompile(`(http(|s))-`)
 
 func proxyGLWebHook(w http.ResponseWriter, r *http.Request) {
-	t_url_parts := strings.Split(r.URL.Path, "/")
-	domain := u_proto_regex.ReplaceAllString(t_url_parts[1], "$1://")
-	log.Println(domain)
-	t_url := domain + "/" + strings.Join(t_url_parts[2:], "/")
-	log.Println("Target URL: " + t_url)
+	t_url := parseURL(r.URL.Path)
 	procr, er := http.NewRequest("POST", t_url, r.Body)
 	if er != nil {
 		msg(w, "Failed to create request", http.StatusInternalServerError)
