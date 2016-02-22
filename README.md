@@ -20,7 +20,7 @@ https://thisproxy.example.com/https-targetciserver.example.com/job/test-ci-job
 
 Command Flags
 ----
--port (default: 8080): proxy listen port
+-port (default: 8080): proxy listen port  
 -github=true (default: false): proxy for GitHub/GitHub Enterprise; Can not work side-by-side with GitLab CE mode
 
 Compile Environment
@@ -36,3 +36,6 @@ Author
 ----
 Tatsuya Kobayashi <pikopiko28@gmail.com>
 
+License
+----
+WTFPL http://www.wtfpl.net/about/
