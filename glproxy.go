@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"regexp"
 	"strings"
+	"time"
 )
 
 func msg(w http.ResponseWriter, msg string, status int) {
@@ -43,7 +44,9 @@ func proxyGLWebHook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	procr.Header.Add("X-Gitlab-Event", r.Header.Get("X-Gitlab-Event"))
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: time.Second * 10,
+	}
 	procrsp, er := client.Do(procr)
 	if er != nil {
 		msg(w, "Failed to post", http.StatusBadRequest)
